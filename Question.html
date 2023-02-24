@@ -40,7 +40,7 @@
         function checkAnswer() {
             var answer = document.querySelector('input').value;
             let lowerAnswer = answer.toLowerCase();
-            if (lowerAnswer == "genesis 1:2" || "Génesis 1:2" || "génesis 1:2" || "génesis 1 2" || "génesis 1-2") {
+            if (lowerAnswer == "genesis 1:2" || lowerAnswer == "Génesis 1:2" || lowerAnswer == "génesis 1:2" || lowerAnswer == "génesis 1 2" || lowerAnswer == "génesis 1-2") {
                 window.location.href = "Code.html";
             } else {
                 alert("Respuesta incorrecta");
