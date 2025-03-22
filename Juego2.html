@@ -1,0 +1,83 @@
+<!-- Juego 2: La Pregunta de Cultura General - HTML con JS -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Juego 2: Pregunta de Cultura General</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shorthandcss@1.1.1/dist/shorthand.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Muli:200,300,400,500,600,700,800,900&display=swap">
+    <style>
+        body {
+            background-color: black;
+            font-family: 'Muli', sans-serif;
+            color: white;
+        }
+        .game-container {
+            max-width: 800px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 12px;
+            background-color: #1a1a1a;
+            border: 2px solid #333;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="fs-l2 fw-900">Juego 2: Pregunta de Cultura General</h1>
+
+        <!-- Pantalla de acceso con código -->
+        <div id="accessScreen">
+            <h2>Introduce el código para jugar</h2>
+            <input type="password" id="accessCode">
+            <button onclick="checkAccessCode()">Ingresar</button>
+            <div id="accessResult"></div>
+        </div>
+
+        <!-- Juego 2: Pregunta de Cultura General -->
+        <div id="game2" style="display: none;">
+            <h2>Pista 2</h2>
+            <div>¿Cuál es el país más grande del mundo por superficie?</div>
+            <input type="text" id="input2">
+            <button onclick="checkGame2()">Enviar</button>
+            <div id="result2"></div>
+        </div>
+    </div>
+
+    <script>
+        function checkAccessCode() {
+            const code = document.getElementById('accessCode').value;
+            const accessResult = document.getElementById('accessResult');
+
+            if (code === '1234') {
+                accessResult.innerText = '';
+                document.getElementById('accessScreen').style.display = 'none';
+                document.getElementById('game2').style.display = 'block';
+            } else {
+                accessResult.innerText = 'Código incorrecto. Intenta nuevamente.';
+            }
+        }
+
+        function checkGame2() {
+            const answer = document.getElementById('input2').value.toUpperCase();
+            const resultDiv = document.getElementById('result2');
+            if (answer === 'RUSIA') {
+                resultDiv.innerHTML = '<h2 style="color: yellow;">¡Ganaste! Tu código es: <span style="color: red;">2222</span><br>Tu próxima pista está en la máquina de correr.</h2>';
+            } else {
+                resultDiv.innerText = 'Respuesta incorrecta. Intenta nuevamente.';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!-- Juego 4: Juego de Arrastrar y Soltar - HTML con JS -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Juego 4: Juego de Arrastrar y Soltar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shorthandcss@1.1.1/dist/shorthand.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Muli:200,300,400,500,600,700,800,900&display=swap">
+    <style>
+        body {
+            background-color: black;
+            font-family: 'Muli', sans-serif;
+            color: white;
+        }
+        .game-container {
+            max-width: 800px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 12px;
+            background-color: #1a1a1a;
+            border: 2px solid #333;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        .draggable {
+            padding: 10px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: grab;
+            display: inline-block;
+        }
+        .dropzone {
+            border: 2px dashed white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            position: relative;
+            min-height: 50px;
+        }
+        .dropzone p {
+            transition: all 0.3s;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+        }
+        .hidden-text {
+            top: -20px;
+            opacity: 0;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="fs-l2 fw-900">Juego 4: Ordena las Palabras</h1>
+
+        <!-- Pantalla de acceso con código -->
+        <div id="accessScreen">
+            <h2>Introduce el código para jugar</h2>
+            <input type="password" id="accessCode">
+            <button onclick="checkAccessCode()">Ingresar</button>
+            <div id="accessResult"></div>
+        </div>
+
+        <!-- Juego 4: Juego de Arrastrar y Soltar -->
+        <div id="game4" style="display: none;">
+            <h2>Arrastra las palabras para formar una frase correcta:</h2>
+            <div id="words">
+                <div class="draggable" draggable="true">AMARILLO</div>
+                <div class="draggable" draggable="true">SOL</div>
+                <div class="draggable" draggable="true">EL</div>
+                <div class="draggable" draggable="true">ES</div>
+            </div>
+            <div class="dropzone" id="dropzone">
+                <p id="dropzoneText">Suelta aquí las palabras en orden</p>
+            </div>
+            <button onclick="checkGame4()">Verificar</button>
+            <button onclick="resetGame4()">Comenzar nuevamente</button>
+            <div id="result4"></div>
+        </div>
+    </div>
+
+    <script>
+        function checkAccessCode() {
+            const code = document.getElementById('accessCode').value;
+            const accessResult = document.getElementById('accessResult');
+
+            if (code === '3333') {
+                accessResult.innerText = '';
+                document.getElementById('accessScreen').style.display = 'none';
+                document.getElementById('game4').style.display = 'block';
+            } else {
+                accessResult.innerText = 'Código incorrecto. Intenta nuevamente.';
+            }
+        }
+
+        const words = document.querySelectorAll('.draggable');
+        const dropzone = document.getElementById('dropzone');
+        const dropzoneText = document.getElementById('dropzoneText');
+
+        words.forEach(word => {
+            word.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text', e.target.innerText);
+            });
+        });
+
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const word = e.dataTransfer.getData('text');
+            if (word) {
+                const newElement = document.createElement('div');
+                newElement.innerText = word;
+                newElement.classList.add('draggable');
+                dropzone.appendChild(newElement);
+
+                if (!dropzoneText.classList.contains('hidden-text')) {
+                    dropzoneText.classList.add('hidden-text');
+                }
+            }
+        });
+
+        function checkGame4() {
+            const userPhrase = Array.from(dropzone.querySelectorAll('.draggable')).map(el => el.innerText).join(' ');
+            const resultDiv = document.getElementById('result4');
+            const correctPhrase = 'EL SOL ES AMARILLO';
+
+            if (userPhrase === correctPhrase) {
+                resultDiv.innerHTML = '<h2 style="color: yellow;">¡Ganaste! Tu código es: <span style="color: red;">4444</span><br>Tu próxima pista está en el árbol cortado.</h2>';
+            } else {
+                resultDiv.innerText = 'Frase incorrecta. Intenta nuevamente.';
+            }
+        }
+
+        function resetGame4() {
+            dropzone.innerHTML = '<p id="dropzoneText">Suelta aquí las palabras en orden</p>';
+            document.getElementById('result4').innerText = '';
+            dropzoneText.classList.remove('hidden-text');
+        }
+    </script>
+</body>
+</html>

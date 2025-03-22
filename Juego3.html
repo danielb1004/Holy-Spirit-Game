@@ -1,0 +1,138 @@
+<!-- Juego 3: El Color Escondido - HTML con JS -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Juego 3: El Color Escondido</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shorthandcss@1.1.1/dist/shorthand.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Muli:200,300,400,500,600,700,800,900&display=swap">
+    <style>
+        body {
+            background-color: black;
+            font-family: 'Muli', sans-serif;
+            color: white;
+        }
+        .game-container {
+            max-width: 800px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 12px;
+            background-color: #1a1a1a;
+            border: 2px solid #333;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .color-button {
+            width: 80px;
+            height: 80px;
+            margin: 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="fs-l2 fw-900">Juego 3: El Color Escondido</h1>
+
+        <!-- Pantalla de acceso con código -->
+        <div id="accessScreen">
+            <h2>Introduce el código para jugar</h2>
+            <input type="password" id="accessCode">
+            <button onclick="checkAccessCode()">Ingresar</button>
+            <div id="accessResult"></div>
+        </div>
+
+        <!-- Juego 3: Secuencia de colores -->
+        <div id="game3" style="display: none;">
+            <h2>Pista 3</h2>
+            <div>Reproduce la secuencia de colores en el orden correcto.</div>
+            <button onclick="generateSequence()">Generar Secuencia</button>
+            <div id="color-buttons"></div>
+            <button onclick="checkGame3()">Verificar</button>
+            <div id="result3"></div>
+        </div>
+    </div>
+
+    <script>
+        let colorSequence = [];
+        let userSequence = [];
+        const colors = ['red', 'green', 'blue', 'yellow'];
+
+        function checkAccessCode() {
+            const code = document.getElementById('accessCode').value;
+            const accessResult = document.getElementById('accessResult');
+
+            if (code === '2222') {
+                accessResult.innerText = '';
+                document.getElementById('accessScreen').style.display = 'none';
+                document.getElementById('game3').style.display = 'block';
+            } else {
+                accessResult.innerText = 'Código incorrecto. Intenta nuevamente.';
+            }
+        }
+
+        function generateSequence() {
+            colorSequence = Array.from({length: 4}, () => colors[Math.floor(Math.random() * colors.length)]);
+            userSequence = [];
+            playSequence();
+            generateButtons();
+        }
+
+        function playSequence() {
+            let index = 0;
+
+            const interval = setInterval(() => {
+                if (index >= colorSequence.length) {
+                    clearInterval(interval);
+                    return;
+                }
+
+                const color = colorSequence[index];
+                const button = document.getElementById(`btn-${color}`);
+
+                button.style.opacity = '0.5';
+                setTimeout(() => { button.style.opacity = '1'; }, 500);
+
+                index++;
+            }, 1000);
+        }
+
+        function generateButtons() {
+            const buttonContainer = document.getElementById('color-buttons');
+            buttonContainer.innerHTML = '';
+
+            colors.forEach(color => {
+                const btn = document.createElement('button');
+                btn.id = `btn-${color}`;
+                btn.className = 'color-button';
+                btn.style.backgroundColor = color;
+                btn.onclick = () => {
+                    userSequence.push(color);
+                };
+                buttonContainer.appendChild(btn);
+            });
+        }
+
+        function checkGame3() {
+            const resultDiv = document.getElementById('result3');
+            if (JSON.stringify(userSequence) === JSON.stringify(colorSequence)) {
+                resultDiv.innerHTML = '<h2 style="color: yellow;">¡Ganaste! Tu código es: <span style="color: red;">3333</span><br>Tu próxima pista está en el primer árbol de la torre KEA.</h2>';
+            } else {
+                resultDiv.innerText = 'Secuencia incorrecta. Intenta nuevamente.';
+            }
+        }
+    </script>
+</body>
+</html>
