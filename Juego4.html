@@ -1,8 +1,8 @@
-<!-- Juego 4: Juego de Arrastrar y Soltar - HTML con JS -->
+<!-- Juego 4: Juego de Tocar y Ordenar - Mejorado para Teléfonos -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Juego 4: Juego de Arrastrar y Soltar</title>
+    <title>Juego 4: Juego de Tocar y Ordenar</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shorthandcss@1.1.1/dist/shorthand.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Muli:200,300,400,500,600,700,800,900&display=swap">
@@ -28,8 +28,9 @@
             background-color: #4CAF50;
             color: white;
             border-radius: 5px;
-            cursor: grab;
+            cursor: pointer;
             display: inline-block;
+            user-select: none;
         }
         .dropzone {
             border: 2px dashed white;
@@ -38,18 +39,6 @@
             border-radius: 10px;
             position: relative;
             min-height: 50px;
-        }
-        .dropzone p {
-            transition: all 0.3s;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-        }
-        .hidden-text {
-            top: -20px;
-            opacity: 0;
         }
         button {
             padding: 10px 20px;
@@ -74,18 +63,16 @@
             <div id="accessResult"></div>
         </div>
 
-        <!-- Juego 4: Juego de Arrastrar y Soltar -->
+        <!-- Juego 4: Juego de Tocar y Ordenar -->
         <div id="game4" style="display: none;">
-            <h2>Arrastra las palabras para formar una frase correcta:</h2>
+            <h2>Presiona las palabras en orden:</h2>
             <div id="words">
-                <div class="draggable" draggable="true">AMARILLO</div>
-                <div class="draggable" draggable="true">SOL</div>
-                <div class="draggable" draggable="true">EL</div>
-                <div class="draggable" draggable="true">ES</div>
+                <div class="draggable" onclick="selectWord(this)">AMARILLO</div>
+                <div class="draggable" onclick="selectWord(this)">SOL</div>
+                <div class="draggable" onclick="selectWord(this)">EL</div>
+                <div class="draggable" onclick="selectWord(this)">ES</div>
             </div>
-            <div class="dropzone" id="dropzone">
-                <p id="dropzoneText">Suelta aquí las palabras en orden</p>
-            </div>
+            <div class="dropzone" id="dropzone"></div>
             <button onclick="checkGame4()">Verificar</button>
             <button onclick="resetGame4()">Comenzar nuevamente</button>
             <div id="result4"></div>
@@ -106,37 +93,21 @@
             }
         }
 
-        const words = document.querySelectorAll('.draggable');
-        const dropzone = document.getElementById('dropzone');
-        const dropzoneText = document.getElementById('dropzoneText');
+        function selectWord(element) {
+            const dropzone = document.getElementById('dropzone');
+            const newElement = document.createElement('div');
+            newElement.innerText = element.innerText;
+            newElement.classList.add('draggable');
+            dropzone.appendChild(newElement);
 
-        words.forEach(word => {
-            word.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('text', e.target.innerText);
-            });
-        });
-
-        dropzone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-        });
-
-        dropzone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            const word = e.dataTransfer.getData('text');
-            if (word) {
-                const newElement = document.createElement('div');
-                newElement.innerText = word;
-                newElement.classList.add('draggable');
-                dropzone.appendChild(newElement);
-
-                if (!dropzoneText.classList.contains('hidden-text')) {
-                    dropzoneText.classList.add('hidden-text');
-                }
-            }
-        });
+            // Desactivar la palabra seleccionada
+            element.style.pointerEvents = 'none';
+            element.style.opacity = '0.5';
+        }
 
         function checkGame4() {
-            const userPhrase = Array.from(dropzone.querySelectorAll('.draggable')).map(el => el.innerText).join(' ');
+            const userPhrase = Array.from(document.getElementById('dropzone').querySelectorAll('.draggable'))
+                                .map(el => el.innerText).join(' ');
             const resultDiv = document.getElementById('result4');
             const correctPhrase = 'EL SOL ES AMARILLO';
 
@@ -148,9 +119,14 @@
         }
 
         function resetGame4() {
-            dropzone.innerHTML = '<p id="dropzoneText">Suelta aquí las palabras en orden</p>';
+            document.getElementById('dropzone').innerHTML = '';
             document.getElementById('result4').innerText = '';
-            dropzoneText.classList.remove('hidden-text');
+
+            const words = document.querySelectorAll('#words .draggable');
+            words.forEach(word => {
+                word.style.pointerEvents = 'auto';
+                word.style.opacity = '1';
+            });
         }
     </script>
 </body>
